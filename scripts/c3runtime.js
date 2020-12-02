@@ -3045,6 +3045,9 @@ value){switch(index){case ENABLE:this.SetEnabled(value);break}}GetDebuggerProper
 		C3.Plugins.System.Cnds.OnLayoutStart,
 		C3.Plugins.System.Acts.SetBoolVar,
 		C3.Plugins.Timeline.Acts.PlayTimeline,
+		C3.Plugins.Text.Cnds.CompareInstanceVar,
+		C3.Plugins.Text.Acts.SetText,
+		C3.Plugins.System.Exps.projectversion,
 		C3.Plugins.Audio.Cnds.IsTagPlaying,
 		C3.Plugins.Audio.Acts.Play,
 		C3.Plugins.Timeline.Cnds.OnTimelineFinishedByTags,
@@ -3055,8 +3058,6 @@ value){switch(index){case ENABLE:this.SetEnabled(value);break}}GetDebuggerProper
 		C3.Plugins.System.Acts.SetVar,
 		C3.Plugins.System.Acts.SetLayerVisible,
 		C3.Plugins.Sprite.Acts.SetAnim,
-		C3.Plugins.Text.Cnds.CompareInstanceVar,
-		C3.Plugins.Text.Acts.SetText,
 		C3.Plugins.System.Cnds.TriggerOnce,
 		C3.Behaviors.EightDir.Acts.SetEnabled,
 		C3.Plugins.System.Cnds.ForEach,
@@ -3256,6 +3257,11 @@ value){switch(index){case ENABLE:this.SetEnabled(value);break}}GetDebuggerProper
 
 	self.C3_ExpressionFuncs = [
 		() => "titleIn",
+		() => "version",
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => ("Version " + f0());
+		},
 		() => "bgm",
 		() => -10,
 		() => "press",
