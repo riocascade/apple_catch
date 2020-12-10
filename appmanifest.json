@@ -1,6 +1,6 @@
 {
-	"name": "CatchApple",
-	"short_name": "CatchApple",
+	"name": "Whack A Mole",
+	"short_name": "Whack A Mole",
 	"description": "",
 	"start_url": "index.html",
 	"display": "fullscreen",
