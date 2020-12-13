@@ -2993,17 +2993,16 @@ d},Unpin(){this._SetPinInst(null);this._mode="";this._propSet.clear();this._pinI
 		C3.Plugins.Sprite.Acts.SetAnim,
 		C3.Plugins.Text.Acts.Destroy,
 		C3.Plugins.System.Cnds.TriggerOnce,
+		C3.Plugins.System.Cnds.For,
+		C3.Plugins.System.Exps.random,
 		C3.Plugins.System.Exps.choose,
 		C3.Plugins.Timeline.Cnds.IsPlayingByTags,
-		C3.Plugins.Browser.Acts.ConsoleLog,
+		C3.Plugins.Arr.Acts.Push,
 		C3.Plugins.Timeline.Acts.PlayTimelineByName,
+		C3.Plugins.Browser.Acts.ConsoleLog,
 		C3.Plugins.Sprite.Cnds.CompareInstanceVar,
-		C3.Plugins.System.Cnds.Compare,
-		C3.Plugins.Arr.Exps.Width,
-		C3.Plugins.System.Acts.AddVar,
-		C3.Plugins.Arr.Cnds.CompareX,
 		C3.Plugins.Sprite.Acts.SetAnimFrame,
-		C3.Plugins.System.Exps.random,
+		C3.Plugins.Sprite.Acts.SetDefaultColor,
 		C3.Plugins.Sprite.Exps.AnimationFrameCount,
 		C3.Plugins.Timeline.Cnds.OnKeyframeReached,
 		C3.Plugins.Timeline.Acts.PauseTimelineByTags,
@@ -3014,23 +3013,24 @@ d},Unpin(){this._SetPinInst(null);this._mode="";this._propSet.clear();this._pinI
 		C3.Plugins.Sprite.Cnds.IsBoolInstanceVarSet,
 		C3.Plugins.Sprite.Cnds.IsAnimPlaying,
 		C3.Behaviors.Timer.Acts.StopTimer,
+		C3.Plugins.System.Acts.AddVar,
 		C3.Plugins.Sprite.Cnds.CompareFrame,
-		C3.Plugins.System.Acts.Wait,
+		C3.Plugins.Audio.Acts.SetVolume,
+		C3.Plugins.Audio.Cnds.OnEnded,
 		C3.Plugins.System.Cnds.ForEach,
 		C3.Behaviors.Pin.Acts.PinByProperties,
-		C3.Plugins.System.Cnds.For,
-		C3.Plugins.Arr.Acts.Push,
+		C3.Plugins.Arr.Cnds.Contains,
+		C3.Plugins.System.Exps.loopindex,
 		C3.Plugins.System.Cnds.While,
 		C3.Plugins.Arr.Exps.At,
-		C3.Plugins.Arr.Acts.Insert,
-		C3.Plugins.System.Exps.loopindex,
+		C3.Plugins.Arr.Exps.Width,
 		C3.Plugins.Arr.Acts.Delete,
 		C3.Plugins.Arr.Exps.IndexOf,
+		C3.Plugins.System.Cnds.Compare,
 		C3.Plugins.Sprite.Exps.LayerName,
 		C3.Plugins.Sprite.Acts.Destroy,
 		C3.Plugins.Sprite.Cnds.CompareOpacity,
-		C3.Plugins.Audio.Acts.SetVolume,
-		C3.Plugins.Audio.Cnds.OnEnded
+		C3.Plugins.System.Acts.Wait
 		];
 	};
 	self.C3_JsPropNameTable = [
@@ -3041,6 +3041,7 @@ d},Unpin(){this._SetPinInst(null);this._mode="";this._propSet.clear();this._pinI
 		{Browser: 0},
 		{CorrectWordSpawn: 0},
 		{RandomIncorrectMole: 0},
+		{CorrectMoleNo: 0},
 		{Background: 0},
 		{Anchor: 0},
 		{Title: 0},
@@ -3063,16 +3064,15 @@ d},Unpin(){this._SetPinInst(null);this._mode="";this._propSet.clear();this._pinI
 		{Pin: 0},
 		{Words: 0},
 		{Button: 0},
+		{insertedWord: 0},
 		{second: 0},
 		{minute: 0},
+		{minCorrectMole: 0},
 		{moleNo: 0},
 		{score: 0},
-		{insertedWord: 0},
-		{index: 0},
 		{moleSpawned: 0},
 		{moleWordWrongNo: 0},
 		{moleCount: 0},
-		{ignoreMoleNo: 0},
 		{pageActive: 0},
 		{gameLevel: 0},
 		{BONUS_SCORE: 0},
@@ -3093,7 +3093,8 @@ d},Unpin(){this._SetPinInst(null);this._mode="";this._propSet.clear();this._pinI
 		{moleShowTime: 0},
 		{MOLE_SHOW_TIME_LV1: 0},
 		{MOLE_SHOW_TIME_LV2: 0},
-		{MOLE_SHOW_TIME_LV3: 0}
+		{MOLE_SHOW_TIME_LV3: 0},
+		{bgmFade: 0}
 	];
 }
 
@@ -3239,6 +3240,7 @@ d},Unpin(){this._SetPinInst(null);this._mode="";this._propSet.clear();this._pinI
 		() => "score",
 		() => "fail",
 		() => "failIn",
+		() => -10,
 		() => "win",
 		p => {
 			const v0 = p._GetNode(0).GetVar();
@@ -3247,10 +3249,11 @@ d},Unpin(){this._SetPinInst(null);this._mode="";this._propSet.clear();this._pinI
 		() => "resultIn",
 		() => 3,
 		() => "replay",
+		() => "",
 		p => {
-			const v0 = p._GetNode(0).GetVar();
+			const f0 = p._GetNode(0).GetBoundMethod();
 			const v1 = p._GetNode(1).GetVar();
-			return () => (v0.GetValue() / v1.GetValue());
+			return () => Math.round(f0(v1.GetValue(), 2));
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -3262,24 +3265,17 @@ d},Unpin(){this._SetPinInst(null);this._mode="";this._propSet.clear();this._pinI
 		},
 		p => {
 			const v0 = p._GetNode(0).GetVar();
-			return () => and("correct mole no ", v0.GetValue());
-		},
-		p => {
-			const v0 = p._GetNode(0).GetVar();
 			return () => and("Mole", v0.GetValue());
 		},
 		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => f0(0, 1, 2);
+			const v0 = p._GetNode(0).GetVar();
+			return () => and("correct mole no ", v0.GetValue());
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => and("mole", f0(1, 2, 3, 4, 5));
 		},
-		p => {
-			const n0 = p._GetNode(0);
-			return () => (n0.ExpObject() - 1);
-		},
+		() => -1023,
 		p => {
 			const v0 = p._GetNode(0).GetVar();
 			return () => and("correctLv", v0.GetValue());
@@ -3289,7 +3285,10 @@ d},Unpin(){this._SetPinInst(null);this._mode="";this._propSet.clear();this._pinI
 			const n1 = p._GetNode(1);
 			return () => Math.round(f0(0, n1.ExpObject()));
 		},
-		() => "incorrect",
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0(0, 1, 2);
+		},
 		() => "mole1 show",
 		() => "mole1",
 		() => "mole1 in",
@@ -3312,6 +3311,7 @@ d},Unpin(){this._SetPinInst(null);this._mode="";this._propSet.clear();this._pinI
 			const n0 = p._GetNode(0);
 			return () => n0.ExpInstVar();
 		},
+		() => "incorrect",
 		p => {
 			const n0 = p._GetNode(0);
 			return () => (and("mole", n0.ExpInstVar()) + " in");
@@ -3324,7 +3324,7 @@ d},Unpin(){this._SetPinInst(null);this._mode="";this._propSet.clear();this._pinI
 		() => "correctLv1",
 		() => "correctLv2",
 		() => "correctLv3",
-		() => 0.4,
+		() => -20,
 		() => "failOut",
 		() => "clockOut",
 		() => "scoreOut",
@@ -3341,28 +3341,13 @@ d},Unpin(){this._SetPinInst(null);this._mode="";this._propSet.clear();this._pinI
 			return () => (v0.GetValue() + v1.GetValue());
 		},
 		() => 75,
-		() => 1.3,
-		() => 0.7,
+		() => 1.5,
 		() => 60,
 		p => {
 			const v0 = p._GetNode(0).GetVar();
 			return () => ((v0.GetValue() / 10) + 3);
 		},
-		() => "",
-		p => {
-			const v0 = p._GetNode(0).GetVar();
-			return () => (v0.GetValue() - 1);
-		},
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const n1 = p._GetNode(1);
-			return () => Math.round(f0(0, (n1.ExpObject() - 1)));
-		},
-		p => {
-			const n0 = p._GetNode(0);
-			const v1 = p._GetNode(1).GetVar();
-			return () => n0.ExpObject(v1.GetValue());
-		},
+		() => "i",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => f0();
@@ -3374,9 +3359,15 @@ d},Unpin(){this._SetPinInst(null);this._mode="";this._propSet.clear();this._pinI
 			return () => n0.ExpObject(Math.round(f1(0, (n2.ExpObject() - 1))));
 		},
 		p => {
+			const n0 = p._GetNode(0);
+			const v1 = p._GetNode(1).GetVar();
+			return () => n0.ExpObject(v1.GetValue());
+		},
+		p => {
 			const v0 = p._GetNode(0).GetVar();
 			return () => and("incorrect mole no ", v0.GetValue());
 		},
+		() => -225125005788159,
 		p => {
 			const v0 = p._GetNode(0).GetVar();
 			return () => and("instruction", v0.GetValue());
@@ -3388,7 +3379,7 @@ d},Unpin(){this._SetPinInst(null);this._mode="";this._propSet.clear();this._pinI
 		},
 		() => 100,
 		() => "word1",
-		() => -15,
+		() => 0.5,
 		() => "word2",
 		() => "word3",
 		() => "word4",
